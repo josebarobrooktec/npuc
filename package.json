@@ -1,0 +1,29 @@
+{
+  "name": "npuc_test",
+  "version": "1.0.0",
+  "description": "Checks updates in packages",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/josebarobrooktec/npuc.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/josebarobrooktec/npuc/issues"
+  },
+  "homepage": "https://github.com/josebarobrooktec/npuc#readme",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "npm-check-updates": "^12.5.12",
+    "semver": "^7.6.3"
+  },
+  "devDependencies": {
+    "eslint": "^8.2.0",
+    "eslint-config-brooktec-node": "^1.0.1",
+    "eslint-plugin-import": "^2.25.2"
+  }
+}

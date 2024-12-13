@@ -7,11 +7,51 @@ const { checkNodeversion: mustCheckNodeVersion } = require('./getConfig');
 
 const nvmrcPath = path.join(cwd(), '.nvmrc');
 
-function getLastNodeLTS() {
+let nodeVersions = [];
+
+function getNodeVersions() {
   const nodeDistUrl = 'https://nodejs.org/dist/index.json';
-  const nodeDist = JSON.parse(execSync(`curl -s ${nodeDistUrl}`).toString());
-  const ltsVersions = nodeDist.find((version) => version.lts);
-  return ltsVersions.version;
+  return JSON.parse(execSync(`curl -s ${nodeDistUrl}`).toString());
+}
+
+function setNodeVersions() {
+  nodeVersions = getNodeVersions();
+}
+
+function getLastNodeLTS() {
+  const ltsVersions = nodeVersions.find((version) => version.lts);
+  return {
+    version: ltsVersions.version,
+    name: ltsVersions.lts,
+  };
+}
+
+function versionToArray(version) {
+  const parsedVersion = version.replace(/[^0-9.*]/g, '');
+  return parsedVersion.split('.').map((n) => (n === '*' ? Infinity : parseInt(n, 10)));
+}
+
+function compareVersions(ltsVersionObj, version) {
+  // if version is a name like 'lts/*' compare names
+  if (version.includes('lts/')) {
+    // compatibility with older versions of node
+    // eslint-disable-next-line prefer-template
+    return 'lts/' + (ltsVersionObj.name.toLowerCase()) === version.toLowerCase() ? 0 : -1;
+  }
+
+  const ltsVersionArray = versionToArray(ltsVersionObj.version);
+  const versionArray = versionToArray(version);
+
+  const minLength = Math.min(ltsVersionArray.length, versionArray.length);
+  for (let i = 0; i < minLength; i += 1) {
+    if (ltsVersionArray[i] > versionArray[i]) {
+      return -1;
+    }
+    if (ltsVersionArray[i] < versionArray[i]) {
+      return 1;
+    }
+  }
+  return 0;
 }
 
 function checkNodeVersion() {
@@ -30,12 +70,13 @@ function checkNodeVersion() {
 
   const nvmrcVersion = fs.readFileSync(nvmrcPath, 'utf8').trim();
 
-  const nodeLTSVersion = getLastNodeLTS();
+  setNodeVersions();
+  const nodeLTSVersionObj = getLastNodeLTS();
 
   return {
     nvmrcVersion,
-    nodeLTSVersion,
-    isValidNode: nvmrcVersion === nodeLTSVersion,
+    nodeLTSVersion: nodeLTSVersionObj.version,
+    isValidNode: compareVersions(nodeLTSVersionObj, nvmrcVersion) >= 0,
   };
 }
 

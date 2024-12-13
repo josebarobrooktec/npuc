@@ -18,7 +18,7 @@ let rc = {};
 if (fs.existsSync(rcPath)) {
   rc = JSON.parse(fs.readFileSync(rcPath, 'utf8'));
 } else if (isInit) {
-  console.log(chalk.dim('Creating rc file'));
+  console.log(chalk.dim(`Creating rc file:${rcPath}`));
   fs.writeFileSync(rcPath, JSON.stringify(sampleRcFile, null, 2));
 } else {
   console.log(chalk.dim('No rc file found. Run with --init to create one'));

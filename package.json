@@ -1,8 +1,11 @@
 {
   "name": "npuc_test",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Checks updates in packages",
   "main": "index.js",
+  "bin": {
+    "npuc": "index.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

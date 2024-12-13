@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable no-console */
 const chalk = require('chalk');
 
 const { showHelp, showLicenses } = require('./src/lib/getParams');
@@ -49,7 +50,7 @@ if (showLicenses) {
       console.log(chalk.green('No updates available'));
       process.exit(0);
     }
-    console.log(chalk.dim('Run npm-check-updates -u to update or add to skipPackages in .npucrc.json if is not posible'));
+    console.log(chalk.dim('Run `npx npm-check-updates -u --target minor` or (patch, mayor) to update or add to skipPackages in .npucrc.json if is not posible'));
     process.exit(1);
   });
 }
